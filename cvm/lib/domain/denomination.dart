@@ -34,7 +34,7 @@ enum DenominationValue {
     int get pesos => centavos ~/ 100;
 
     // spec format for labelling, e.g. "P20 bill", "P5 coin"
-    String get label => `$display ${type.name}`;
+    String get label => '$display ${type.name}';
 
     // greedy loop, higher denominations first before checking for lower denominations
     static const List<DenominationValue> forChange = [
@@ -48,17 +48,17 @@ enum DenominationValue {
         peso10,
         peso5,
         peso1,
-    ]
+    ];
 
     // did not include 20 peso coin, specs only specified "Bills" data type
-    static const List<DenominationValue> acceptedBills [
+    static const List<DenominationValue> acceptedBills = [
         peso1000,
         peso500,
         peso200,
         peso100,
         peso50,
         peso20Bill
-    ]
+    ];
 
     // check if user input is a valid bill denomination
     static bool isAcceptedBill(int pesos)=>
