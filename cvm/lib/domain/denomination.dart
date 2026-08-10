@@ -60,6 +60,7 @@ enum DenominationValue {
         peso20Bill
     ]
 
+    // check if user input is a valid bill denomination
     static bool isAcceptedBill(int pesos)=>
         acceptedBills.any((bill) => bill.pesos == pesos);
 }
