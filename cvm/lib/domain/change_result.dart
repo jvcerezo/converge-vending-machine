@@ -6,7 +6,7 @@ class ChangeEntry {
     const ChangeEntry(this.denomination, this.count)
         : assert(count >= 0, 'Count must be non-negative');
     
-    final Denomination denomination;
+    final DenominationValue denomination;
     final int count;
 
     // total value of this entry in centavos
@@ -43,7 +43,7 @@ sealed class ChangeResult {
 }
 
 final class ChangeSuccess extends ChangeResult {
-    const changeSuccess({required this.entries, required this.totalPesos});
+    const ChangeSuccess({required this.entries, required this.totalPesos});
 
     final List<ChangeEntry> entries;
 
