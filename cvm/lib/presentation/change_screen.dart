@@ -1,9 +1,12 @@
-import 'package:cvm/domain/denomination.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../domain/change_calculator.dart';
 import '../domain/change_result.dart';
+import '../domain/denomination.dart';
+import 'theme/peso_theme.dart';
 import 'widgets/amount_field.dart';
+import 'widgets/bill_picker.dart';
 import 'widgets/change_breakdown.dart';
 
 class ChangeScreen extends StatefulWidget {
@@ -65,6 +68,11 @@ class _ChangeScreenState extends State<ChangeScreen> {
     return null;
   }
 
+  // tapping a note just fills the bill field, validation stays the same
+  void _selectBill(DenominationValue bill) {
+    _billController.text = bill.pesos.toString();
+  }
+
   void _compute() {
     FocusScope.of(context).unfocus();
     if (!(_formKey.currentState?.validate() ?? false)) {
@@ -97,15 +105,39 @@ class _ChangeScreenState extends State<ChangeScreen> {
             tooltip: 'Reset',
           ),
         ],
+        bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(3),
+          // thin brass line under the app bar
+          child: ColoredBox(
+            color: PesoColors.brandBrass,
+            child: SizedBox(height: 3, width: double.infinity),
+          ),
+        ),
       ),
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () => FocusScope.of(context).unfocus(),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+        child: SafeArea(
+          // scrollable so the keyboard does not squish the fields
+          child: ListView(
+            padding: EdgeInsets.fromLTRB(
+              16,
+              16,
+              16,
+              MediaQuery.of(context).viewInsets.bottom + 24,
+            ),
             children: [
+              const _SectionLabel('Insert a bill'),
+              const SizedBox(height: 8),
+              // listens to the controller so only the picker rebuilds on tap
+              ValueListenableBuilder<TextEditingValue>(
+                valueListenable: _billController,
+                builder: (context, value, _) => BillPicker(
+                  selectedPesos: int.tryParse(value.text.trim()),
+                  onSelected: _selectBill,
+                ),
+              ),
+              const SizedBox(height: 16),
               Form(
                 key: _formKey,
                 child: Column(
@@ -113,8 +145,7 @@ class _ChangeScreenState extends State<ChangeScreen> {
                     AmountField(
                       controller: _billController,
                       label: 'Bill inserted',
-                      // show in labels what users can input
-                      helperText: 'P20, P50, P100, P200, P500, or P1000',
+                      helperText: 'Tap a note above, or type the amount',
                       validator: _validateBill,
                     ),
                     const SizedBox(height: 12),
@@ -134,17 +165,42 @@ class _ChangeScreenState extends State<ChangeScreen> {
               // button user can press when ready to submit
               const SizedBox(height: 16),
               SizedBox(
-                height: 48,
+                height: 56,
                 child: FilledButton(
                   onPressed: _canSubmit ? _compute : null,
-                  child: const Text('Compute change'),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.calculate_outlined, size: 20),
+                      SizedBox(width: 8),
+                      Text('Compute change'),
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(height: 24),
-              Expanded(child: ChangeBreakdown(result: _result)),
+              const _SectionLabel('Your change'),
+              const SizedBox(height: 8),
+              ChangeBreakdown(result: _result),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _SectionLabel extends StatelessWidget {
+  const _SectionLabel(this.text);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+        color: Theme.of(context).colorScheme.outline,
       ),
     );
   }

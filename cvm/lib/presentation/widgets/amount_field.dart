@@ -32,11 +32,17 @@ class AmountField extends StatelessWidget {
         LengthLimitingTextInputFormatter(4),
       ],
       onFieldSubmitted: (_) => onSubmitted?.call(),
+      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
       decoration: InputDecoration(
         labelText: label,
         helperText: helperText,
+        helperMaxLines: 2,
         prefixText: 'P ',
-        border: const OutlineInputBorder(),
+        prefixStyle: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.w700,
+          color: Theme.of(context).colorScheme.primary,
+        ),
       ),
     );
   }

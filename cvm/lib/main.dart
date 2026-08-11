@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'presentation/change_screen.dart';
+import 'presentation/theme/peso_theme.dart';
 
 void main() => runApp(const CvmApp());
 
@@ -11,10 +12,7 @@ class CvmApp extends StatelessWidget {
     return MaterialApp(
       title: 'Converge Vending Machine',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF00695C)),
-        useMaterial3: true,
-      ),
+      theme: buildPesoTheme(),
       home: const ChangeScreen(),
     );
   }
