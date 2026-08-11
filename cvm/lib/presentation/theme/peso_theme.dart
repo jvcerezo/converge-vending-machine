@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../domain/denomination.dart';
 
-// note colors match the real NGC bills so users can spot them at a glance.
-// app colors are NOT flag colors on purpose, RA 8491 restricts using the
-// flag design for branding.
+// note colors follow the dominant color of each real banknote
 abstract final class PesoColors {
   static const brandDeep = Color(0xFF14504A);
-  static const brandDeepShade = Color(0xFF0C3A36);
   static const brandBrass = Color(0xFFB98A2E);
 
   // bills, dominant color of each note
@@ -24,7 +21,6 @@ abstract final class PesoColors {
   static const coinCopper = Color(0xFFB87333); // sentimo
 }
 
-// color of the denomination plus a readable text color on top of it
 extension DenominationSwatch on DenominationValue {
   Color get swatchColor => switch (this) {
     DenominationValue.peso1000 => PesoColors.note1000,
@@ -43,7 +39,7 @@ extension DenominationSwatch on DenominationValue {
     DenominationValue.sentimo1 => PesoColors.coinCopper,
   };
 
-  // yellow and gold need dark text, the rest are dark enough for white
+  // dark text on the light notes, white on the rest
   Color get inkColor => switch (this) {
     DenominationValue.peso500 ||
     DenominationValue.peso20Coin => const Color(0xFF3B2F00),

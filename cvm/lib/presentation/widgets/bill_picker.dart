@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../../domain/denomination.dart';
 import 'money_swatch.dart';
 
-// shortcut for the accepted bills so the user does not have to type.
-// typing in the field still works.
+// shortcut for the accepted bills. typing in the field still works.
 class BillPicker extends StatelessWidget {
   const BillPicker({
     super.key,
@@ -27,10 +25,7 @@ class BillPicker extends StatelessWidget {
           _BillButton(
             bill: bill,
             selected: bill.pesos == selectedPesos,
-            onTap: () {
-              HapticFeedback.selectionClick();
-              onSelected(bill);
-            },
+            onTap: () => onSelected(bill),
           ),
       ],
     );
@@ -52,49 +47,41 @@ class _BillButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
 
-    return Semantics(
-      label: 'Insert ${bill.label}',
-      button: true,
-      selected: selected,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 150),
-          curve: Curves.easeOut,
-          // padding keeps the tap area past the 48dp minimum
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            color: selected ? scheme.primary.withValues(alpha: 0.08) : null,
-            border: Border.all(
-              color: selected ? scheme.primary : Colors.transparent,
-              width: 2,
-            ),
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: selected ? scheme.primary.withValues(alpha: 0.08) : null,
+          border: Border.all(
+            color: selected ? scheme.primary : Colors.transparent,
+            width: 2,
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              MoneySwatch(denomination: bill, width: 72),
-              const SizedBox(height: 4),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (selected) ...[
-                    Icon(Icons.check_circle, size: 12, color: scheme.primary),
-                    const SizedBox(width: 3),
-                  ],
-                  Text(
-                    selected ? 'Inserted' : 'Insert',
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: selected ? scheme.primary : scheme.outline,
-                      fontWeight: selected ? FontWeight.w700 : null,
-                    ),
-                  ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            MoneySwatch(denomination: bill, width: 72),
+            const SizedBox(height: 4),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (selected) ...[
+                  Icon(Icons.check_circle, size: 12, color: scheme.primary),
+                  const SizedBox(width: 3),
                 ],
-              ),
-            ],
-          ),
+                Text(
+                  selected ? 'Inserted' : 'Insert',
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: selected ? scheme.primary : scheme.outline,
+                    fontWeight: selected ? FontWeight.w700 : null,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
