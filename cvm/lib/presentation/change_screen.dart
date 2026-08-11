@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../domain/change_calculator.dart';
 import '../domain/change_result.dart';
@@ -129,7 +128,7 @@ class _ChangeScreenState extends State<ChangeScreen> {
             children: [
               const _SectionLabel('Insert a bill'),
               const SizedBox(height: 8),
-              // listens to the controller so only the picker rebuilds on tap
+              // keeps the picker in sync with whatever is typed in the field
               ValueListenableBuilder<TextEditingValue>(
                 valueListenable: _billController,
                 builder: (context, value, _) => BillPicker(
